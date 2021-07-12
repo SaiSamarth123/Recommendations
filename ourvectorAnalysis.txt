@@ -1,0 +1,55 @@
+
+I used podcastsTiny.txt, ratingsTiny.txt and the user Riley for this analysis.
+When the program is compiled and run the program creates 2 string ourvectors(765,767, one 2D int ourvector(766) which is 2 int ourvectors, 2 int ourvectors in the function advanced(370-371) and 1 double ourvector(225) in basic(total 7)
+- Load: 15 new int ourvectors are created after calling load(31 and 105). 7 ourvectors are created on line 31. 8 are created when the ratings are pushed back into the 2D vector. It is 8 because the size of the ourvector doubles as we add more(4->8->16).The 2D vector has an empty ourvector. Sixteen elements were inserted into both the string vector combined. Names are accessed twice in loadRatings and as a result 14 elements are accessed(2*7). Seven vectors of ratings are inserted into the 2D vector and since the elements use [] and .at() the elements are accessed twice(126). 15 int vectors are created when loadRatings is called. 9 elements are added to int vectors in two places(81) and since it's making a copy of the first ourvector the second time, the elements are inserted again(162).
+- Login: There are no new vectors created but elements in the names vector are accessed 7 times on line 133. Only 7 elements are accessed from the names ourvector.
+- Show: No new ourvectors created. The elements in ratings get accessed twice(7*2). Only Riley's items get printed so 5 elements get accessed. All of the names are accessed, so 12 elements from string vectors get accessed. The elements in the 2D vector are accessed 12 times(7 users + 5 ratings), but since it's a 2D vector and is calling both [] and .at() functions it accesses elements twice (24). 
+- Basic: A double vector is created on line 225. The averages are inserted, so 9 elements are added in averageVec function. 81 elements are accessed in the loop that prints the basic recommendations. These vary depending on the user. The elements in the double ourvector are accessed twice(9*2). The elements in the int vectors are accessed 38 times in the loop printing the recommendations. 48 elements are accessed by the 2D ourvector in averageVec, basicAverage and basic functions. 4 items and 7 names get accessed from the string ourvectors.
+- Advanced: 2 new int ourvectors are created on lines 370 and 371. One int ourvector is copied so that creates a new ourvector. Approximately 18-20 elements are inserted into the int vectors. These elements are accessed about 220 times in various functions. About 61 elements are accessed from the 2D ourvector. All the elements from names and 4 elements from items are accessed as well.
+- Print items: No new vectors created. Nothing is accessed from the int ourvectors. Elements in items are accessed twice so 18 elements are accessed from string ourvectors.
+- Print users: 14 elements are accessed from the names ourvector
+- Add user: New int ourvector is created on line 31. 9 elements in getRatings and 9 in addUser are added to int ourvectors. 1 new element inserted into 2D vector(new ratings). 1 new element added to the names ourvector(new user).
+- Add ratings: 1 element is accessed from the int ourvector of ratings to change it. This element is accessed from the 2D array so it happens twice in the 2D ourvector. All of the elements from names are accessed to find index and one element from items.
+
+Vectors created:
+ourvector<i> stats:
+Load + Compile + Advanced + Add = 15 + 4 + 3 + 1 = 23
+
+ourvector<9ourvectorIiE> stats:
+Compile = 1(ratings)
+
+ourvector<NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE> stats:
+Compile = 2(names and items)
+
+ourvector<double> average
+Basic = 1(averages)
+
+
+After Basic(ourvector<double> averages):
+*********************************************************
+ourvector<d> stats:
+ # of vectors created:   1
+ # of elements inserted: 9
+ # of elements accessed: 81
+*********************************************************
+
+
+Thank you for using the Recommendations app!
+*********************************************************
+ourvector<i> stats:
+ # of vectors created:   23
+ # of elements inserted: 203
+ # of elements accessed: 445
+*********************************************************
+*********************************************************
+ourvector<9ourvectorIiE> stats:
+ # of vectors created:   1
+ # of elements inserted: 8
+ # of elements accessed: 268
+*********************************************************
+*********************************************************
+ourvector<NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE> stats:
+ # of vectors created:   2
+ # of elements inserted: 17
+ # of elements accessed: 96
+*********************************************************

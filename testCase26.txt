@@ -1,0 +1,29 @@
+load songsStudents.txt ratingsSongsStudents.txt
+login pmccar5
+basic
+advanced
+login BugsBunny
+basic
+advanced
+login asdfjkl;
+basic
+advanced
+login Daniel
+basic
+advanced
+login Danielle
+basic
+advanced
+login kpate391
+basic
+advanced
+login Adelina Carr
+basic
+advanced
+login universalbutterfly
+basic
+advanced
+login mmihay3
+basic
+advanced
+#
