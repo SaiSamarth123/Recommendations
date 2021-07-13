@@ -726,17 +726,26 @@ bool& adminIn, int& deItem) {
     } else if (cmd == "login") {
         cout << "\n" << "-----------------------------" << endl;
         cin.ignore();
-        getline(cin, user);
-        login(user, admin, i, n, r, loggedIn, adminIn);
-        cout << "Enter command or # to quit: ";
-        cin >> cmd;
+        string u;
+        getline(cin, u);
+        if (user != u && user != "") {
+            cout << "\nUser needs to log out first" << endl;
+            checkAdmin(adminIn, loggedIn, user, admin);
+            cout << "Enter command or # to quit: ";
+            cin >> cmd;
+        } else {
+            user = u;
+            login(user, admin, i, n, r, loggedIn, adminIn);
+            cout << "Enter command or # to quit: ";
+            cin >> cmd;
+        }
      } else if(cmd == "logout") {
          if (loggedIn) {
              user = "";
              loggedIn = false;
              cout << "\n"
                   << "-----------------------------" << endl;
-             cout << "Successfully logged out" << endl;
+             cout << "\nSuccessfully logged out" << endl;
              checkAdmin(adminIn, loggedIn, user, admin);
              cout << "Enter command or # to quit: ";
              cin >> cmd;
