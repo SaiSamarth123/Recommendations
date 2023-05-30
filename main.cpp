@@ -14,7 +14,10 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 #include "ourvector.h"
+#include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -368,51 +371,127 @@ int findMax(ourvector<int> output) {
     }
     return index;
 }
+
+// function to compute recommendations using weighted average of ratings
+
+// function to compute Pearson Correlation
+double pearsonCorrelation(ourvector<int> &person1, ourvector<int> &person2)
+{
+    int sum1 = 0, sum2 = 0, sum1Sq = 0, sum2Sq = 0, pSum = 0;
+    int n = person1.size();
+    for (int i = 0; i < n; i++)
+    {
+        sum1 += person1[i];
+        sum2 += person2[i];
+        sum1Sq += pow(person1[i], 2);
+        sum2Sq += pow(person2[i], 2);
+        pSum += person1[i] * person2[i];
+    }
+    double num = pSum - (sum1 * sum2 / n);
+    double den = sqrt((sum1Sq - pow(sum1, 2) / n) * (sum2Sq - pow(sum2, 2) / n));
+    if (den == 0)
+        return 0;
+    return num / den;
+}
+
+bool comparePair(const pair<int, double>& a, const pair<int, double> & b) {
+    return a.second > b.second;
+}
+
+void advanced(string user, ourvector<string> &items,
+                  ourvector<string> &names, ourvector<ourvector<int> > &rating)
+{
+    cout << "\n"
+         << "Advanced KNN recommendations:" << endl;
+    int userIndex = findUser(user, names);
+    vector<pair<double, int> > similarity;
+    for (int i = 0; i < rating.size(); i++)
+    {
+        if (i != userIndex)
+        {
+            double sim = pearsonCorrelation(rating[userIndex], rating[i]);
+            similarity.push_back(make_pair(sim, i));
+        }
+    }
+    sort(similarity.rbegin(), similarity.rend()); // sort in descending order
+    vector<double> predictedRatings(items.size(), -1.0);
+    for (int i = 0; i < items.size(); i++)
+    {
+        if (rating[userIndex][i] == 0)
+        { // user hasn't rated this item
+            double sumSim = 0.0, sumRatings = 0.0;
+            for (int k = 0; k < 5; k++)
+            { // consider 5 nearest neighbors
+              if (rating[similarity[k].second][i] != 0)
+              {
+                sumSim += abs(similarity[k].first);
+                sumRatings += similarity[k].first * rating[similarity[k].second][i];
+              }
+            }
+            if (sumSim > 0)
+            {
+              predictedRatings[i] = sumRatings / sumSim;
+            }
+        }
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        int maxIndex = max_element(predictedRatings.begin(), predictedRatings.end()) - predictedRatings.begin();
+        if (predictedRatings[maxIndex] != -1.0)
+        {
+            cout << items[maxIndex] << endl;
+            predictedRatings[maxIndex] = -1.0; // to avoid repetition
+        }
+    }
+}
+
 // advanced (string user, ourvector<string>& items,
 // ourvector<string>& names, ourvector<ourvector<int>>& rating);
 // Function recommends the top 5 titles based on the highest
 // dot product between the current user and other users.
 // Return type: NONE;
-void advanced(string user, ourvector<string>& items,
-ourvector<string>& names, ourvector<ourvector<int> >& rating) {
-    ourvector<int> output;
-    ourvector<int> o;
-    cout << "\n" << "Advanced recommendations:" << endl;
-    int num = findUser(user, names);
-    dotVec(num, output, rating);
-    int max;
-    int ind = 0;
-    int index = findMax(output);
-    o = rating[index];
-    int prev = -1;
-    int l;
-    int times = 0;
-    for (int i1 = 0; i1 < 5; i1++) {
-        max = -6;
-        l = 0;
-    while (l < o.size()) {
-        if (rating[num].at(l) == 0 && o.at(l) != -6) { 
-            if (max < o.at(l)) {
-                max = o.at(l);
-                ind = l;
-            }
-        }
-       l++;
-    }
-    if (prev != ind) {
-        if (rating[num].at(ind) == 0 || rating[index].at(ind) != 0) {
-            o.at(ind) = -6;
-            cout << items.at(ind) << endl;
-            times++;
-            max = 0;
-            prev = ind;
-        }
-    }
-    prev = ind;
-    }
-    // output.clear();
-    // o.clear();
-}
+// void advanced(string user, ourvector<string>& items,
+// ourvector<string>& names, ourvector<ourvector<int> >& rating) {
+//     ourvector<int> output;
+//     ourvector<int> o;
+//     cout << "\n" << "Advanced recommendations:" << endl;
+//     int num = findUser(user, names);
+//     dotVec(num, output, rating);
+//     int max;
+//     int ind = 0;
+//     int index = findMax(output);
+//     o = rating[index];
+//     int prev = -1;
+//     int l;
+//     int times = 0;
+//     for (int i1 = 0; i1 < 5; i1++) {
+//         max = -6;
+//         l = 0;
+//     while (l < o.size()) {
+//         if (rating[num].at(l) == 0 && o.at(l) != -6) { 
+//             if (max < o.at(l)) {
+//                 max = o.at(l);
+//                 ind = l;
+//             }
+//         }
+//        l++;
+//     }
+//     if (prev != ind) {
+//         if (rating[num].at(ind) == 0 || rating[index].at(ind) != 0) {
+//             o.at(ind) = -6;
+//             cout << items.at(ind) << endl;
+//             times++;
+//             max = 0;
+//             prev = ind;
+//         }
+//     }
+//     prev = ind;
+//     }
+//     // output.clear();
+//     // o.clear();
+// }
+
+
 // makeAdmin (string adMin, string& user, ourvector<string>& items,
 // ourvector<string>& names, ourvector<ourvector<int>>& rating,
 // bool& l, bool& isAdmin);
